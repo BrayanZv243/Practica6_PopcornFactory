@@ -1,31 +1,38 @@
 package mx.itson.edu.popcornfactory
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.GridView
+import android.widget.ImageView
+import android.widget.TextView
 
 class Catalogo : AppCompatActivity() {
 
     var adapter: PeliculaAdapter? = null
     var peliculas = ArrayList<Pelicula>()
-    val gridview: GridView = findViewById(R.id.gridView)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_catalogo)
 
         cargarPeliculas()
-
+        val gridview: GridView = findViewById(R.id.gridView)
         adapter = PeliculaAdapter(peliculas,this)
         gridview.adapter = adapter
 
     }
 
     fun cargarPeliculas(){
+        
+        // PELICULAS
         peliculas.add(Pelicula("Big Hero", R.drawable.bighero6,R.drawable.headerbighero6,"When a devastating event befalls the city of San Fransokyo and catapults Hiro into the\n" +
                 "midst of danger, he turns to Baymax and his close friends adrenaline junkie Go Go\n" +
                 "Tomago, neatnik Wasabi, chemistry whiz Honey Lemon and fanboy Fred. Determined to\n" +
@@ -120,20 +127,50 @@ class Catalogo : AppCompatActivity() {
     class PeliculaAdapter : BaseAdapter{
         var peliculas = ArrayList<Pelicula>()
         var context: Context? = null
+
+        constructor(peliculas: ArrayList<Pelicula>, context: Context?) : super() {
+            this.peliculas = peliculas
+            this.context = context
+        }
+
         override fun getCount(): Int {
-            TODO("Not yet implemented")
+            return peliculas.size
         }
 
-        override fun getItem(p0: Int): Any {
-            TODO("Not yet implemented")
+        override fun getItem(position: Int): Any {
+            return peliculas[position]
         }
 
-        override fun getItemId(p0: Int): Long {
-            TODO("Not yet implemented")
+        override fun getItemId(position: Int): Long {
+            return position.toLong()
         }
 
-        override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
-            TODO("Not yet implemented")
+
+        @SuppressLint("MissingInflatedId")
+        override fun getView(position: Int, converView: View?, parent: ViewGroup?): View {
+            var pelicula = peliculas[position]
+            var inflator = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            var vista = inflator.inflate(R.layout.pelicula,null)
+
+            var imagen = vista.findViewById(R.id.iv_pelicula) as ImageView
+            var titulo = vista.findViewById(R.id.tv_titulo) as TextView
+
+
+
+            imagen.setImageResource(pelicula.image)
+            titulo.setText(pelicula.titulo)
+
+            imagen.setOnClickListener{
+                val intento = Intent(context,Detalle_pelicula::class.java)
+                intento.putExtra("titulo",pelicula.titulo)
+                intento.putExtra("imagen",pelicula.image)
+                intento.putExtra("header",pelicula.header)
+                intento.putExtra("sinopsis",pelicula.sinopsis)
+                context!!.startActivity(intento)
+            }
+
+            return vista
+
         }
     }
 }

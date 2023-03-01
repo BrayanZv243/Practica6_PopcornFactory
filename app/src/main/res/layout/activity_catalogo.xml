@@ -25,9 +25,10 @@
     <GridView
         android:id="@+id/gridView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textColor="@color/yellow"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
         android:numColumns="3"
-    />
+        android:paddingHorizontal="6dp"
+        android:textColor="@color/yellow" />
 
 </LinearLayout>
